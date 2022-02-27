@@ -1,4 +1,7 @@
+# orange detection https://www.youtube.com/watch?v=ce-2l2wRqO8
 # imutils grabs the contours that have already formed
+
+# https://www.youtube.com/watch?v=_aTC-Rc4Io0
 import numpy as np
 import cv2
 import imutils
@@ -57,8 +60,15 @@ while True:
             start_point = (centers[0][0], centers[0][1])
             end_point = (centers[1][0], centers[1][1])
             dy = centers[1][0] - centers[1][1]
-            center_point = np.sqrt(dx*dx+dy*dy)
-            print(f"Distance between: {center_point}")
+            #calculate lenght of line
+            center_line = np.sqrt(dx*dx+dy*dy)
+            #calculate center point of line
+            center_point_x = int((centers[0][0]+centers[1][0])/2)
+            center_point_y = int((centers[0][1]+centers[1][1])/2)
+            center_point = (center_point_x, center_point_y)
+            print(center_point)
+            cv2.circle(frame, (center_point_x, center_point_y), 10, (255, 255, 255), -1)
+            print(f"Distance between: {center_line}")
             cv2.line(frame, start_point, end_point, (255,255,255), 2)
             print(f"start: {start_point}")
             print(f"end: {end_point}")
