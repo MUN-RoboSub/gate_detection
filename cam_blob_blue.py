@@ -1,33 +1,41 @@
 # orange detection https://www.youtube.com/watch?v=ce-2l2wRqO8
+# https://www.youtube.com/watch?v=_aTC-Rc4Io0
 # imutils grabs the contours that have already formed
 
-# https://www.youtube.com/watch?v=_aTC-Rc4Io0
+
 import numpy as np
 import cv2
 import imutils
 import math
 # getting the computers video capture
 cap = cv2.VideoCapture(0)
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
 
 while True:
     # reading the frames/cam
     _, frame = cap.read()
-    
+
 
     # applying a gaussian blur to the cam so that it does not pick up background noise
     blurred_frame = cv2.GaussianBlur(frame, (5, 5), 0)
     hsv_frame = cv2.cvtColor(blurred_frame, cv2.COLOR_BGR2HSV)
     
     # defining the upper and lower bounds for color
-    lower_blue = np.array([38, 86, 0])
-    upper_blue = np.array([121, 255, 255])
-    
+    # lower_blue = np.array([38, 86, 0])
+    # upper_blue = np.array([121, 255, 255])
+    # lower_blue = np.array([0, 80, 80])
+    # upper_blue = np.array([30, 255, 255])
+    lower_orange = np.array([10, 156, 73])
+    upper_orange = np.array([31, 255, 255])
+
+
     # creating a blue hsv_frame mask so that only the specified range shows up
-    blue_mask = cv2.inRange(hsv_frame, lower_blue, upper_blue)
-    blue = cv2.bitwise_and(frame, frame, mask=blue_mask)
+    orange_mask = cv2.inRange(hsv_frame, lower_orange, upper_orange)
+    blue = cv2.bitwise_and(frame, frame, mask=orange_mask)
 
     # defining contours and setting imutils.grab_contours to get the already created contours
-    contours = cv2.findContours(blue_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+    contours = cv2.findContours(orange_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
     contours = imutils.grab_contours(contours)
     centers = []
         
@@ -36,7 +44,7 @@ while True:
         # print(area)
         # print(len(contours))
         # only display for blue things that are a specifed size
-        if area > 800:
+        if area > 1800:
             cv2.drawContours(frame, [contour], -1, (0,255, 0), 3)
 
             # movements is used to plot points 
@@ -66,12 +74,12 @@ while True:
             center_point_x = int((centers[0][0]+centers[1][0])/2)
             center_point_y = int((centers[0][1]+centers[1][1])/2)
             center_point = (center_point_x, center_point_y)
-            print(center_point)
+            #print(center_point)
             cv2.circle(frame, (center_point_x, center_point_y), 10, (255, 255, 255), -1)
             print(f"Distance between: {center_line}")
             cv2.line(frame, start_point, end_point, (255,255,255), 2)
-            print(f"start: {start_point}")
-            print(f"end: {end_point}")
+            # print(f"start: {start_point}")
+            # print(f"end: {end_point}")
             
             
 
